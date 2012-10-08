@@ -148,8 +148,8 @@ public:
     
     void parse(ubyte[] d)
     {
-        char[] s = cast(char[]) (text(d[0]) ~ " : " ~ to!(char[])(d[1..$]));
-        OptimusPrime.events.add(EventType.SAY, cast(immutable char[]) s);
+        char[] s = cast(immutable char[]) (text(d[0]) ~ " : " ~ cast(char[]) (d[1..$]));
+        OptimusPrime.events.add(EventType.SAY, s);
     }
     
     void run()
@@ -159,18 +159,18 @@ public:
         
         ubyte[64] buf;
         while (status == 0) {
-            if (stream.read(buf) > 0) {
-                if (buf[5] == 0x19) {
-                    parse(buf[6..$]);
+            if (stream.read(buf[0..1]) > 0) {
+                if (stream.read(buf[1..4]) > 0) {
+
+                    int l = *cast(int*)(buf[0..4]).ptr;
+                    stream.read(buf[0..l];
+                    
+                    if (buf[0] == 0x19)
+                        parse(buf[1..$]);
                 }
             }
         }
     }
 
 }
-/*
-void main()
-{
-    auto p = new Player(cast(char[]) "127.0.0.1", 7777);
-    p.connect();
-}*/
+
