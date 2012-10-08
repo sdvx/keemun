@@ -7,7 +7,7 @@ user:TRB
 realname:TRB
 channel:#fCraft.terraria
 nickserv:true
-ns-pass:fCr4ftB0t
+ns-pass:
 commands:true
 
 # Terraria settings
@@ -17,7 +17,7 @@ port:7777
 password:test
 maxplayers:64
 motd:This is a test server!
-worldpath:C:\Users\Nick\Desktop\keemun\worlds\
+worldpath:
 banlist:banlist.txt
 priority:1
 auto-wipe:true
