@@ -1,0 +1,25 @@
+# IRC settings
+
+server:irc.esper.net
+port:6667
+nick:TRB
+user:TRB
+realname:TRB
+channel:#fCraft.terraria
+nickserv:true
+ns-pass:fCr4ftB0t
+commands:true
+
+# Terraria settings
+
+server:127.0.0.1
+port:7777
+password:test
+maxplayers:64
+motd:This is a test server!
+worldpath:C:\Users\Nick\Desktop\keemun\worlds\
+banlist:banlist.txt
+priority:1
+auto-wipe:true
+wipe-interval:1w
+backup:true
