@@ -70,15 +70,7 @@ void main() {
     OptimusPrime.events = cast(shared EventQueue) new EventQueue();
     Keemun.events = cast(shared EventQueue) new EventQueue();
     
-    //Write a config class
     auto bot = new OptimusPrime();
-    bot.nick = cast(char[]) "TRB";
-    bot.user = cast(char[]) "TRB";
-    bot.realname = cast(char[]) "TRB";
-    bot.invisible = true;
-    bot.nickserv = true;
-    bot.nspass = cast(char[]) ""; //This shouldn't be visible :P
-    bot.chan = cast(char[]) "#fCraft.terraria";
     bot.start();
     
     auto tea = new Keemun();

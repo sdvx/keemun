@@ -1,6 +1,7 @@
 import std.socket;
 import std.socketstream;
 import std.stdio;
+import std.string;
 import std.conv;
 import core.thread;
 import message;
@@ -11,7 +12,7 @@ class Player : Thread
 {
 private:
 
-    char[] server;
+    string server;
     ushort port;
     TcpSocket sock;
     SocketStream stream;
@@ -28,9 +29,9 @@ public:
         super(&run);
     }
     
-    void connect(immutable char[] s, ushort p = 7777)
+    void connect(string s, ushort p = 7777)
     {
-        server = cast(char[]) s;
+        server = s;
         port = p;
         m = new Messenger();
         sock = new TcpSocket(new InternetAddress(server, port));
@@ -124,7 +125,7 @@ public:
         sock.send(data);
     }
     
-    void msg(char[] data)
+    void msg(string data)
     {
         ubyte[] c = cast(ubyte[]) [
             data.length + 0x05, 0x00, 0x00, 0x00,
@@ -148,7 +149,7 @@ public:
     
     void parse(ubyte[] d)
     {
-        char[] s = cast(immutable char[]) (text(d[0]) ~ " : " ~ cast(char[]) (d[1..$]));
+        string s = cast(string)(text(d[0]) ~ " : " ~ cast(char[]) (d[1..$]));
         OptimusPrime.events.add(EventType.SAY, s);
     }
     
