@@ -8,6 +8,7 @@ realname:TRB
 channel:#fCraft.terraria
 nickserv:true
 ns-pass:
+invisible:true
 commands:true
 
 # Terraria settings

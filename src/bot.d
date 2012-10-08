@@ -1,4 +1,5 @@
 import std.stdio;
+import std.string;
 import std.socket;
 import std.socketstream;
 import std.array;
@@ -12,7 +13,7 @@ class OptimusPrime : core.thread.Thread
 private:
 
     const char[] CTCP = [cast(char) 0x01];
-    char[] server;
+    string server;
     ushort port;
     TcpSocket sock;
     SocketStream stream;
@@ -20,12 +21,12 @@ private:
 public:
 
     static shared EventQueue events;
-    char[] nick;
-    char[] altnick;
-    char[] user;
-    char[] realname;
-    char[] nspass;
-    char[] chan;
+    string nick;
+    string altnick;
+    string user;
+    string realname;
+    string nspass;
+    string chan;
     bool invisible = false;
     bool nickserv = false;
 
@@ -34,9 +35,22 @@ public:
         super(&run);
     }
 
-    void connect(immutable char[] s, ushort p = 6667)
+    void init()
     {
-        server = cast(char[]) s;
+        nick = Config.get("nick");
+        altnick = Config.get("altnick");
+        user = Config.get("user");
+        realname = Config.get("realname");
+        chan = Config.get("channel");
+        nspass = Config.get("ns-pass");
+
+        nickserv = (Config.get("nickserv") == "true");
+        invisible = (Config.get("invisible") == "true");
+    }
+
+    void connect(string s, ushort p = 6667)
+    {
+        server = s;
         sock = new TcpSocket(new InternetAddress(s, p));
         stream = new SocketStream(sock);
 
@@ -58,37 +72,37 @@ public:
         join(chan);
     }
 
-    void send(char[] m)
+    void send(string m)
     {
         sock.send(m ~ "\r\n");
     }
 
-    void msg(char[] m, char[] r = ['\0'])
+    void msg(string m, string r = "")
     {
-        send("PRIVMSG " ~ ((r == ['\0']) ? chan : r) ~ " :" ~ m);
+        send("PRIVMSG " ~ ((r == "") ? chan : r) ~ " :" ~ m);
     }
 
-    void action(char[] m, char[] c = ['\0'])
+    void action(string m, string c = "")
     {
         msg(CTCP ~ "ACTION " ~ m ~ CTCP, c);
     }
 
-    void setnick(char[] m)
+    void setnick(string m)
     {
         send("NICK " ~ m);
     }
 
-    void setuser(char[] u, char[] r, bool i)
+    void setuser(string u, string r, bool i)
     {
         send("USER " ~ u ~ ((i) ? " 8" : " 0") ~ " * :" ~ r);
     } 
 
-    void ns(char[] m)
+    void ns(string m)
     {
-        msg(m, cast(char[]) "NICKSERV");
+        msg(m, "NICKSERV");
     }
 
-    void join(char[] m)
+    void join(string m)
     {
         send("JOIN :" ~ m);
     }
@@ -100,35 +114,35 @@ public:
 
     void quit()
     {
-        send(cast(char[]) "QUIT :Bye~");
+        send("QUIT :Bye~");
         sock.close();
     }
 
-    char[] rec()
+    string rec()
     {
         if (sock.isAlive()) {
-            char[] m = stream.readLine();
+            string m = stream.readLine();
             return m;
         }
         return null;
     }
     
-    char[][] ops()
+    string[] ops()
     {
-        char[][] temp;
+        string[] temp;
         
         send("NAMES " ~ chan);
         
-        char[] ret;
+        string ret;
         while (true) {
             ret = rec();
             
-            if (std.string.indexOf(ret, "353 " ~ nick) > -1) {
+            if (ret.indexOf("353 " ~ nick) > -1) {
                 foreach(m; match(ret, regex(r"@([A-Za-z0-9\[\]{}\\|^`_-]+)", "g")))
                     temp ~= [m.hit[1..$]];
             }
                 
-            if (std.string.indexOf(ret, "End of /NAMES list.") != -1)
+            if (ret.indexOf("End of /NAMES list.") != -1)
                 break;
         };
         return temp;
@@ -147,7 +161,6 @@ public:
     
     void run()
     {
-        writeln("Bot running");
         int status = 0;
         connect("irc.esper.net");
         
