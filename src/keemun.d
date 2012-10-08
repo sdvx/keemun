@@ -77,7 +77,7 @@ void main() {
     bot.realname = cast(char[]) "TRB";
     bot.invisible = true;
     bot.nickserv = true;
-    bot.nspass = cast(char[]) "fCr4ftB0t";
+    bot.nspass = cast(char[]) ""; //This shouldn't be visible :P
     bot.chan = cast(char[]) "#fCraft.terraria";
     bot.start();
     

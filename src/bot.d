@@ -3,7 +3,6 @@ import std.socket;
 import std.socketstream;
 import std.array;
 import std.regex;
-//import core.thread;
 import core.time;
 import event;
 
@@ -109,7 +108,6 @@ public:
     {
         if (sock.isAlive()) {
             char[] m = stream.readLine();
-            //writeln(m);
             return m;
         }
         return null;
@@ -161,35 +159,9 @@ public:
             }
             
             if (events.size > 0) {
-                writeln("Handling events");
                 handle(events.pop());
             }
         }
     }
 }
-/*
-void main()
-{
-    auto bot = new OptimusPrime();
-    bot.nick = "TRB";
-    bot.user = "TRB";
-    bot.realname = "TRB";
-    bot.invisible = true;
-    bot.nickserv = true;
-    bot.nspass = "fCr4ftB0t";
-    bot.chan = "#fCraft";
-    
-    //core.thread.Thread.sleep(dur!("seconds")(3));
-    
-    char[] o = cast(char[]) "Channel ops: ";
-    char[][] op = bot.ops();
-    
-    foreach (u; op)
-        o ~= (u ~ [',', ' ']);
-        
-    bot.msg(o[0..$-2]);
 
-    //core.thread.Thread.sleep(dur!("seconds")(3));
-    
-    bot.quit();
-}*/
